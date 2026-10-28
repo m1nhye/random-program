@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>클래스 픽 | 교실 랜덤 도구</title>
+<style>
+:root{--ink:#1d2b3a;--muted:#718096;--line:#e5ebf1;--bg:#f4f7fb;--white:#fff;--blue:#4263eb;--blue2:#edf1ff;--mint:#dff7ef;--coral:#fff0e9;--shadow:0 12px 35px rgba(34,54,82,.08)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family: Pretendard,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;font-weight:700;transition:.18s}button:disabled{opacity:.45;cursor:not-allowed}
+.top{background:#fff;border-bottom:1px solid var(--line);padding:18px 4vw;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px;font-size:21px;font-weight:900;letter-spacing:-.7px}.logo{width:40px;height:40px;border-radius:13px;background:var(--blue);color:white;display:grid;place-items:center;font-size:22px}
+.sub{color:var(--muted);font-size:13px;margin-top:3px}.topright{font-size:13px;color:var(--muted)}
+.wrap{max-width:1440px;margin:26px auto;padding:0 26px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.tab{background:#e9eef5;color:#607086;padding:13px 19px;border-radius:12px}.tab.active{background:var(--ink);color:white}
+.layout{display:grid;grid-template-columns:310px minmax(0,1fr);gap:20px;align-items:start}
+.panel,.mainpanel{background:white;border:1px solid var(--line);border-radius:19px;box-shadow:var(--shadow)}
+.panel{padding:21px;position:sticky;top:15px}.mainpanel{padding:28px;min-height:590px}
+h2{font-size:20px;margin:0 0 6px;letter-spacing:-.5px}h3{font-size:15px;margin:22px 0 10px}.hint{color:var(--muted);font-size:13px;line-height:1.5;margin:0 0 16px}
+textarea{width:100%;min-height:205px;resize:vertical;border:1px solid var(--line);border-radius:12px;padding:13px;line-height:1.65;outline:none;color:var(--ink);background:#fbfcfe}textarea:focus,input:focus,select:focus{border-color:#8da1ff;box-shadow:0 0 0 3px #4263eb18;outline:none}
+.row{display:flex;gap:9px;align-items:center}.row>*{min-width:0}.row input,.row select,input[type=number]{border:1px solid var(--line);border-radius:10px;padding:10px;width:100%;background:#fff}
+.btn{padding:11px 14px;border-radius:10px;background:#eef2f7;color:#334155}.btn.primary{background:var(--blue);color:white}.btn.dark{background:var(--ink);color:white}.btn.lightblue{background:var(--blue2);color:var(--blue)}.btn.danger{background:#fff0f0;color:#c24141}.btn.small{padding:8px 10px;font-size:12px}
+.full{width:100%;margin-top:9px}.stat{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin:12px 0}.stat b{color:var(--ink)}
+.mainhead{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;margin-bottom:24px}.mainhead p{margin:6px 0 0;color:var(--muted);font-size:14px}
+.mode{display:none}.mode.active{display:block}
+.controlrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}.controlrow label{font-size:13px;color:#58677a;font-weight:700}.controlrow input[type=number]{width:82px}
+.check{display:flex;gap:8px;align-items:center;font-size:13px;color:#536276}.check input{accent-color:var(--blue);width:16px;height:16px}
+.drawstage{min-height:300px;border-radius:20px;background:linear-gradient(135deg,#f0f4ff,#f0fbf8);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:28px;text-align:center;position:relative;overflow:hidden}
+.eyebrow{font-size:12px;letter-spacing:1.8px;font-weight:800;color:#7182a0}.result{font-size:clamp(38px,6vw,66px);font-weight:900;letter-spacing:-2px;margin:18px 0 8px;word-break:keep-all}.result.winner{color:var(--blue);animation:pop .38s ease}.result.placeholder{color:#b3bfd0;font-size:32px}
+@keyframes pop{0%{transform:scale(.75);opacity:.3}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+.drawbtn{font-size:18px;padding:16px 36px;border-radius:14px;margin-top:18px;box-shadow:0 8px 18px #4263eb30}.under{font-size:12px;color:var(--muted);margin-top:13px}
+.pills{display:flex;gap:7px;flex-wrap:wrap;margin-top:20px}.pill{padding:7px 11px;border-radius:99px;background:#f1f4f8;color:#65758a;font-size:12px}.pill.out{background:#fff0e9;color:#b45336}
+.gridcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:13px;margin-top:18px}
+.groupcard{border:1px solid var(--line);border-radius:15px;padding:16px;background:#fff}.groupcard h3{margin:0 0 12px;display:flex;justify-content:space-between}.member{padding:8px 10px;background:#f5f7fb;border-radius:9px;margin:6px 0;font-size:14px}
+.orderlist{display:grid;gap:8px;margin-top:16px}.orderitem{display:flex;gap:12px;align-items:center;border:1px solid var(--line);padding:12px;border-radius:11px}.num{width:30px;height:30px;border-radius:9px;background:var(--blue2);color:var(--blue);display:grid;place-items:center;font-weight:900}
+.history{margin-top:25px;border-top:1px solid var(--line);padding-top:18px}.historyhead{display:flex;justify-content:space-between;align-items:center}.historylist{font-size:13px;color:#607086;line-height:1.8;max-height:150px;overflow:auto}
+.namechips{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}.chip{border:1px solid var(--line);border-radius:9px;padding:6px 9px;font-size:12px;background:#fff}.chip.off{opacity:.35;text-decoration:line-through}
+.notice{font-size:12px;color:#a15c38;background:#fff7ed;padding:10px 12px;border-radius:10px;margin-top:12px;display:none}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1d2b3a;color:#fff;padding:12px 18px;border-radius:12px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.2s;z-index:5;font-size:13px}.toast.show{opacity:1}
+.roleinputs{display:flex;gap:8px;flex-wrap:wrap}.roleinputs input{flex:1;min-width:130px}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.panel{position:static}.mainpanel{padding:19px}.wrap{padding:0 14px}.top{padding:14px}.topright{display:none}.drawstage{min-height:260px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="brand"><div class="logo">✦</div><div>클래스 픽<div class="sub">수업을 더 가볍고 즐겁게</div></div></div><div class="topright">교실 랜덤 도구 · 데이터는 이 기기에 저장됩니다</div></header>
+<div class="wrap">
+<nav class="tabs">
+<button class="tab active" data-tab="pick">🎯 학생 뽑기</button><button class="tab" data-tab="group">🧩 모둠 구성</button><button class="tab" data-tab="order">🔢 발표 순서</button><button class="tab" data-tab="role">🎭 역할 배정</button>
+</nav>
+<div class="layout">
+<aside class="panel">
+<h2>학생 명단</h2><p class="hint">이름을 한 줄에 한 명씩 입력하세요. 붙여넣기도 가능합니다.</p>
+<textarea id="roster" placeholder="김민준&#10;이서연&#10;박지우&#10;최도윤"></textarea>
+<div class="row"><button class="btn primary" id="saveNames">명단 저장</button><button class="btn" id="clearNames">비우기</button></div>
+<div class="stat"><span>등록된 학생</span><b id="total">0명</b></div>
+<h3>추첨 대상 제외</h3><p class="hint">이름을 눌러 추첨 대상에서 제외하거나 다시 포함하세요.</p>
+<div class="namechips" id="exclusions"></div>
+<div class="notice" id="emptyNotice">학생 명단을 먼저 입력하고 저장해 주세요.</div>
+</aside>
+<main class="mainpanel">
+<section class="mode active" id="pick">
+<div class="mainhead"><div><h2>학생 랜덤 뽑기</h2><p>오늘의 주인공을 공정하고 재미있게 뽑아 보세요.</p></div><button class="btn small" id="resetDraw">뽑기 초기화</button></div>
+<div class="controlrow"><label>뽑을 인원</label><input type="number" id="pickCount" min="1" value="1"><label class="check"><input type="checkbox" id="noRepeat" checked> 중복 추첨 방지</label></div>
+<div class="drawstage"><div class="eyebrow">TODAY'S PICK</div><div class="result placeholder" id="pickResult">누가 뽑힐까요?</div><div id="pickSub" class="under">버튼을 눌러 추첨을 시작하세요.</div><button class="btn primary drawbtn" id="drawBtn">랜덤 뽑기 시작</button></div>
+<div class="pills" id="pickedPills"></div>
+</section>
+<section class="mode" id="group">
+<div class="mainhead"><div><h2>모둠 랜덤 구성</h2><p>전체 인원을 최대한 균등하게 나눕니다.</p></div><button class="btn small" id="shuffleGroups">다시 섞기</button></div>
+<div class="controlrow"><label>구성 방식</label><select id="groupMode"><option value="count">모둠 수로 나누기</option><option value="size">모둠별 인원으로 나누기</option></select><label id="groupLabel">모둠 수</label><input type="number" id="groupValue" min="1" value="5"><button class="btn primary" id="makeGroups">모둠 만들기</button></div>
+<div class="gridcards" id="groupResults"><p class="hint">모둠 만들기를 누르면 결과가 여기에 표시됩니다.</p></div>
+</section>
+<section class="mode" id="order">
+<div class="mainhead"><div><h2>발표 순서 정하기</h2><p>발표 순서를 무작위로 섞어 한눈에 확인하세요.</p></div><button class="btn small" id="copyOrder">결과 복사</button></div>
+<div class="drawstage" style="min-height:150px"><div class="eyebrow">RANDOM ORDER</div><div class="result placeholder" style="font-size:28px" id="orderLead">순서를 정해 볼까요?</div><button class="btn primary" id="makeOrder">발표 순서 추첨</button></div>
+<div class="orderlist" id="orderResults"></div>
+</section>
+<section class="mode" id="role">
+<div class="mainhead"><div><h2>역할 랜덤 배정</h2><p>학생과 역할을 무작위로 연결합니다.</p></div><button class="btn small" id="copyRoles">결과 복사</button></div>
+<h3 style="margin-top:0">역할 목록</h3><div class="roleinputs"><input id="newRole" placeholder="예: 사회자"><button class="btn lightblue" id="addRole">역할 추가</button></div><div class="namechips" id="roleChips"></div>
+<div style="margin-top:18px"><button class="btn primary" id="assignRoles">역할 배정하기</button></div><div class="gridcards" id="roleResults"></div>
+</section>
+<div class="history"><div class="historyhead"><h3 style="margin:0">추첨 기록</h3><div class="row"><button class="btn small" id="copyHistory">기록 복사</button><button class="btn small danger" id="clearHistory">기록 삭제</button></div></div><div class="historylist" id="historyList">아직 기록이 없습니다.</div></div>
+</main>
+</div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const $=id=>document.getElementById(id);
+const storeKey='classpick_v1';
+let data={names:[],excluded:[],picked:[],history:[],roles:['사회자','기록자','발표자']};
+try{data={...data,...JSON.parse(localStorage.getItem(storeKey)||'{}')}}catch(e){}
+let lastGroups=[],lastOrder=[],lastRoles=[];
+function save(){localStorage.setItem(storeKey,JSON.stringify(data));}
+function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2100)}
+function uniqueNames(text){return [...new Set(text.split(/[\n,，;；]+/).map(x=>x.trim()).filter(Boolean))]}
+function activeNames(){return data.names.filter(n=>!data.excluded.includes(n))}
+function render(){
+ $('roster').value=data.names.join('\n');$('total').textContent=data.names.length+'명';
+ $('exclusions').innerHTML='';
+ data.names.forEach(n=>{let b=document.createElement('button');b.className='chip'+(data.excluded.includes(n)?' off':'');b.textContent=(data.excluded.includes(n)?'＋ ':'− ')+n;b.title='눌러서 제외/포함';b.onclick=()=>{data.excluded=data.excluded.includes(n)?data.excluded.filter(x=>x!==n):[...data.excluded,n];save();render()};$('exclusions').append(b)});
+ $('pickedPills').innerHTML='';data.picked.forEach(n=>{let s=document.createElement('span');s.className='pill';s.textContent='✓ '+n;$('pickedPills').append(s)});
+ $('historyList').innerHTML=data.history.length?data.history.slice().reverse().map(x=>`<div>• ${esc(x)}</div>`).join(''):'아직 기록이 없습니다.';
+ $('roleChips').innerHTML='';data.roles.forEach((r,i)=>{let b=document.createElement('button');b.className='chip';b.textContent='× '+r;b.title='역할 삭제';b.onclick=()=>{data.roles.splice(i,1);save();render()};$('roleChips').append(b)});
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function record(label,items){data.history.push(new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})+' · '+label+' : '+items.join(', '));save();render()}
+function shuffle(a){let x=[...a];for(let i=x.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x}
+function requireNames(){if(!data.names.length){$('emptyNotice').style.display='block';toast('학생 명단을 먼저 입력해 주세요.');return false}$('emptyNotice').style.display='none';if(!activeNames().length){toast('추첨 가능한 학생이 없습니다.');return false}return true}
+$('saveNames').onclick=()=>{let names=uniqueNames($('roster').value);if(!names.length){toast('이름을 한 명 이상 입력해 주세요.');return}data.names=names;data.excluded=data.excluded.filter(n=>names.includes(n));data.picked=data.picked.filter(n=>names.includes(n));save();render();toast(names.length+'명의 명단을 저장했어요.')};
+$('clearNames').onclick=()=>{if(!confirm('학생 명단을 모두 비울까요?'))return;data.names=[];data.excluded=[];data.picked=[];save();render();toast('명단을 비웠어요.')};
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.mode').forEach(x=>x.classList.toggle('active',x.id===b.dataset.tab))});
+$('resetDraw').onclick=()=>{data.picked=[];save();render();$('pickResult').textContent='누가 뽑힐까요?';$('pickResult').className='result placeholder';$('pickSub').textContent='다시 추첨할 수 있어요.';toast('추첨 대상이 초기화됐어요.')};
+$('drawBtn').onclick=()=>{
+ if(!requireNames())return;
+ let count=Math.max(1,Math.floor(+$('pickCount').value||1)),noRepeat=$('noRepeat').checked;
+ let pool=activeNames().filter(n=>!noRepeat||!data.picked.includes(n));
+ if(noRepeat&&pool.length===0){toast('아직 뽑지 않은 학생이 없어요. 초기화해 주세요.');return}
+ if(count>pool.length){toast('현재 추첨 가능한 인원은 '+pool.length+'명입니다.');count=pool.length;$('pickCount').value=count}
+ let winners=shuffle(pool).slice(0,count),res=$('pickResult'),btn=$('drawBtn');btn.disabled=true;res.className='result';$('pickSub').textContent='두근두근…';
+ let ticks=0,timer=setInterval(()=>{res.textContent=pool[Math.floor(Math.random()*pool.length)];ticks++;if(ticks>=13){clearInterval(timer);res.textContent=winners.join(' · ');res.className='result winner';$('pickSub').textContent='축하합니다! 오늘의 주인공입니다.';btn.disabled=false;if(noRepeat)data.picked=[...data.picked,...winners];record('학생 추첨',winners);}},85);
+};
+$('groupMode').onchange=()=>{$('groupLabel').textContent=$('groupMode').value==='count'?'모둠 수':'모둠별 인원';$('groupValue').value=$('groupMode').value==='count'?5:4};
+function buildGroups(){
+ if(!requireNames())return;let v=Math.max(1,Math.floor(+$('groupValue').value||1)),n=activeNames().length;
+ let count=$('groupMode').value==='count'?Math.min(v,n):Math.ceil(n/v);
+ let shuffled=shuffle(activeNames());lastGroups=Array.from({length:count},()=>[]);
+ shuffled.forEach((name,i)=>lastGroups[i%count].push(name));
+ $('groupResults').innerHTML='';lastGroups.forEach((g,i)=>{let card=document.createElement('div');card.className='groupcard';card.innerHTML=`<h3><span>${i+1}모둠</span><span class="pill">${g.length}명</span></h3>`+g.map(n=>`<div class="member">${esc(n)}</div>`).join('');$('groupResults').append(card)});
+ record('모둠 구성',lastGroups.map((g,i)=>(i+1)+'모둠 '+g.join('/')));
+}
+$('makeGroups').onclick=buildGroups;$('shuffleGroups').onclick=()=>{if(!lastGroups.length){buildGroups();return}buildGroups()};
+$('makeOrder').onclick=()=>{if(!requireNames())return;lastOrder=shuffle(activeNames());$('orderLead').textContent=lastOrder.length+'명의 발표 순서 완성';$('orderLead').className='result winner';$('orderResults').innerHTML='';lastOrder.forEach((n,i)=>{let d=document.createElement('div');d.className='orderitem';d.innerHTML=`<span class="num">${i+1}</span><b>${esc(n)}</b>`;$('orderResults').append(d)});record('발표 순서',lastOrder)};
+$('addRole').onclick=()=>{let r=$('newRole').value.trim();if(!r){toast('추가할 역할 이름을 입력해 주세요.');return}if(data.roles.includes(r)){toast('이미 있는 역할입니다.');return}data.roles.push(r);$('newRole').value='';save();render()};
+$('assignRoles').onclick=()=>{if(!requireNames())return;if(!data.roles.length){toast('역할을 한 개 이상 추가해 주세요.');return}let students=shuffle(activeNames()),roles=shuffle(data.roles);lastRoles=students.slice(0,Math.min(students.length,roles.length)).map((s,i)=>[roles[i],s]);$('roleResults').innerHTML='';lastRoles.forEach(([r,s])=>{let c=document.createElement('div');c.className='groupcard';c.innerHTML=`<div class="eyebrow">ROLE</div><h3 style="margin:8px 0 4px">${esc(r)}</h3><div class="result" style="font-size:25px;margin:4px 0">${esc(s)}</div>`;$('roleResults').append(c)});if(students.length<roles.length)toast('학생 수가 역할 수보다 적어 일부 역할만 배정했어요.');record('역할 배정',lastRoles.map(([r,s])=>r+'='+s))};
+function copy(text){if(!text){toast('복사할 결과가 없습니다.');return}if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(text).then(()=>toast('결과를 복사했어요.')).catch(()=>fallbackCopy(text));else fallbackCopy(text)}
+function fallbackCopy(text){let t=document.createElement('textarea');t.value=text;document.body.append(t);t.select();document.execCommand('copy');t.remove();toast('결과를 복사했어요.')}
+$('copyOrder').onclick=()=>copy(lastOrder.map((n,i)=>(i+1)+'. '+n).join('\n'));
+$('copyRoles').onclick=()=>copy(lastRoles.map(([r,s])=>r+' : '+s).join('\n'));
+$('copyHistory').onclick=()=>copy(data.history.join('\n'));
+$('clearHistory').onclick=()=>{if(!confirm('추첨 기록을 모두 삭제할까요?'))return;data.history=[];save();render();toast('기록을 삭제했어요.')};
+render();
+</script>
+</body>
+</html>
